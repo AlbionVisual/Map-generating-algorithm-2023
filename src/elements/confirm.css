@@ -1,0 +1,16 @@
+.confirmInput {
+  border: 0.5px solid lightgray;
+  background-color: rgb(245, 245, 245);
+  display: flex;
+  margin: 10px;
+  padding: 2px;
+}
+
+.confirmLabel {
+  margin: 0px;
+  margin-left: 5px;
+}
+
+.confirmInput input {
+  margin-left:5px;margin-right: 5px;
+}

@@ -7,6 +7,7 @@ const Cell = ({ bg, children }) => {
   // console.log("cell");
 
   return (
+    // JSX --cell--
     <div className="cell" style={{ backgroundColor: bg }}>
       {children}
     </div>

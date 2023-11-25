@@ -1,0 +1,16 @@
+.sliderInput {
+  border: 0.5px solid lightgray;
+  background-color: rgb(245, 245, 245);
+  display: flex;
+  margin: 10px;
+  padding: 2px;
+}
+
+.sliderLabel {
+  margin: 0px;
+  margin-left: 5px;
+}
+
+.sliderInput input {
+  margin-left: 5px;
+}
