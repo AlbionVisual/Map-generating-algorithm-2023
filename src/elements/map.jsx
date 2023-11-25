@@ -8,6 +8,7 @@ const Map = ({ world }) => {
   // console.log("map");
 
   return (
+    // JSX (--row--: (--cell-- [[row]]) [[world]])
     <div className="map">
       {world.map((row, y) => {
         return (
