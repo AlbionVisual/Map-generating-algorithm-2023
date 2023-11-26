@@ -2,49 +2,27 @@
 
 import React, { useRef } from "react";
 import "./controls.css";
+import Slider from "./slider";
+import Confirm from "./confirm";
 
-const Controls = ({ sliders }) => {
+const Controls = ({ sliders, confirm }) => {
+  // console.log("Controls")
+
   return (
     // JSX (--name-- --slider-- --input-- [[sliders]])
+    //     (--name-- --input-- --button-- [[confirm]])
     <div className="controls">
       <h2>Control room</h2>
       {sliders &&
         sliders.map((el, ind) => {
-          const sliderRef = useRef();
-          const inputRef = useRef();
-
           return (
-            <div className="sliderContainer" key={ind}>
-              <p className="sliderLabel">{el.name}</p>
-              <input
-                ref={sliderRef}
-                type="range"
-                min="0"
-                max="100"
-                defaultValue="0"
-                onMouseUp={(e) => {
-                  el.setState(sliderRef.current.value);
-                }}
-                onChange={(e) => {
-                  sliderRef.current.value = e.target.value;
-                  inputRef.current.value = e.target.value;
-                }}
-              />
-              <input
-                ref={inputRef}
-                type="number"
-                min="0"
-                max="100"
-                defaultValue="0"
-                onBlur={(e) => {
-                  el.setState(sliderRef.current.value);
-                }}
-                onChange={(e) => {
-                  sliderRef.current.value = e.target.value;
-                  inputRef.current.value = e.target.value;
-                }}
-              />
-            </div>
+            <Slider name={el.name} key={ind} setState={el.setState}></Slider>
+          );
+        })}
+      {confirm &&
+        confirm.map((el, ind) => {
+          return (
+            <Confirm name={el.name} key={ind} setState={el.setState}></Confirm>
           );
         })}
     </div>
