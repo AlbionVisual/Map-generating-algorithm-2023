@@ -1,26 +1,18 @@
 /** @format */
 
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import Map from "./elements/map";
 import Controls from "./elements/controls";
+import { rerenderMap, fillRandomly } from "./functions/rerenderMap";
+import { grayToReal } from "./functions/convertMapColors";
 
 // Consts
-const SIZEX = 4,
-  SIZEY = 4;
+const SIZEX = 64,
+  SIZEY = 64;
 
 // Default functions
-const buildDefaultWorld = () => {
-  // fill world with color
-  const defaultWorld = [[]];
-  for (let i = 0; i < SIZEY; i++) {
-    defaultWorld[i] = [];
-    for (let k = 0; k < SIZEX; k++) {
-      defaultWorld[i][k] = { BGRed: 0, BGGreen: 0, BGBlue: 0 }; // you can use "rgb(r,b,g)" here
-    }
-  }
-  return defaultWorld;
-};
+
 const changeValue = (obj, whatChange, withWhat, how = "replace") => {
   // change all values in array of arrays of ... of objects
   let newObj;
@@ -31,7 +23,7 @@ const changeValue = (obj, whatChange, withWhat, how = "replace") => {
     }
   } else {
     newObj = { ...obj };
-    if (how == "replace") newObj[whatChange] = withWhat;
+    if (how == "replace") newObj[whatChange] += withWhat;
     else if (how == "add")
       newObj[whatChange] = Number(newObj[whatChange]) + Number(withWhat);
     else if (how == "remove")
@@ -48,17 +40,15 @@ const App = () => {
   // console.log("App");
 
   // States
-  const [world, setWorld] = useState(buildDefaultWorld);
-  const [appMargin, setAppMargin] = useState(0); // in px
+  const [world, setWorld] = useState(fillRandomly(SIZEX, SIZEY));
+
+  // Refs
+  const weights = useRef([1, 1, 1, 1]);
+  const offset = useRef([0, 1, 0, 2]);
+  const deepness = useRef([1, 2, 4, 8]);
+  const colorBorders = useRef([200, 100, 50]);
 
   // Help funcitons:
-  const changeBackground = (newVal) => {
-    const koff = 255 - (newVal * 255) / 100;
-    let newWorld = changeValue(world, "BGRed", koff);
-    newWorld = changeValue(newWorld, "BGGreen", koff);
-    newWorld = changeValue(newWorld, "BGBlue", koff);
-    setWorld(newWorld);
-  };
   const addToBackground = (howMuch) => {
     let newWorld = changeValue(world, "BGRed", howMuch, "add");
     newWorld = changeValue(newWorld, "BGGreen", howMuch, "add");
@@ -66,22 +56,112 @@ const App = () => {
 
     setWorld(newWorld);
   };
+  const rerenderAlg = () => {
+    setWorld(
+      rerenderMap(
+        world,
+        SIZEX,
+        SIZEY,
+        weights.current,
+        offset.current,
+        deepness.current
+      )
+    );
+  };
+  const changeWeight = (what, how) => {
+    weights.current[what] = +how;
+  };
+  const changeOffset = (what, how) => {
+    offset.current[what] = +how;
+  };
+  const grayToWGB = () => {
+    setWorld(grayToReal(world, SIZEX, SIZEY, colorBorders.current));
+  };
+  const changeBorder = (what, how) => {
+    colorBorders.current[what] = Number(how);
+  };
+
+  const rerenderRand = () => {
+    setWorld(fillRandomly(SIZEX, SIZEY, world));
+  };
 
   return (
     // JSX --controls-- --map--
-    <div
-      className="app"
-      style={{ margin: `${appMargin}px`, backgroundColor: appMargin }}>
+    <div className="app">
       <Controls
         sliders={[
-          { name: "App margin (in px): ", setState: setAppMargin },
           {
-            name: "Change background (grayness): ",
-            setState: changeBackground,
+            name: "Weight 1: ",
+            setState: (how) => {
+              changeWeight(0, how);
+            },
+          },
+          {
+            name: "Weight 2: ",
+            setState: (how) => {
+              changeWeight(1, how);
+            },
+          },
+          {
+            name: "Weight 4: ",
+            setState: (how) => {
+              changeWeight(2, how);
+            },
+          },
+          {
+            name: "Weight 8: ",
+            setState: (how) => {
+              changeWeight(3, how);
+            },
+          },
+          {
+            name: "Offset 1: ",
+            setState: (how) => {
+              changeOffset(0, how);
+            },
+          },
+          {
+            name: "Offset 2: ",
+            setState: (how) => {
+              changeOffset(1, how);
+            },
+          },
+          {
+            name: "Offset 4: ",
+            setState: (how) => {
+              changeOffset(2, how);
+            },
+          },
+          {
+            name: "Offset 8: ",
+            setState: (how) => {
+              changeOffset(3, how);
+            },
+          },
+          {
+            name: "Color Border 1: ",
+            setState: (how) => {
+              changeBorder(0, +how);
+            },
+          },
+          {
+            name: "Color Border 2: ",
+            setState: (how) => {
+              changeBorder(1, +how);
+            },
+          },
+          {
+            name: "Color Border 3: ",
+            setState: (how) => {
+              changeBorder(2, +how);
+            },
           },
         ]}
         confirm={[
           { name: "Add grayness: ", setState: addToBackground },
+          { name: "Re-render with algorithm: ", setState: rerenderAlg },
+          { name: "Re-render randomly: ", setState: rerenderRand },
+          { name: "Gray scale to white green blue: ", setState: grayToWGB },
         ]}></Controls>
       {/* sliders:
             name: label near your slider
