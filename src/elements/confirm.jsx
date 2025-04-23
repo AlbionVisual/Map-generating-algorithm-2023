@@ -15,7 +15,7 @@ const Confirm = ({ name, setState }) => {
         ref={inputRef}
         type="number"
         min="0"
-        max="100"
+        max="255"
         defaultValue="0"
         onChange={(e) => {
           inputRef.current.value = e.target.value;

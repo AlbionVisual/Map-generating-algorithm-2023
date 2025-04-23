@@ -16,7 +16,7 @@ const Slider = ({ name, setState }) => {
         ref={sliderRef}
         type="range"
         min="0"
-        max="100"
+        max="255"
         defaultValue="0"
         onMouseUp={(e) => {
           console.log(sliderRef.current.value);
@@ -31,7 +31,7 @@ const Slider = ({ name, setState }) => {
         ref={inputRef}
         type="number"
         min="0"
-        max="100"
+        max="255"
         defaultValue="0"
         onBlur={(e) => {
           setState(sliderRef.current.value);
