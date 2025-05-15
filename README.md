@@ -1,8 +1,3 @@
-# React + Vite
+# Алгоритм совмещения слоёв белого шума
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Алгоритм математически рассчитывает общее значение ячейки по всем слоям. Первый слой – тот же белый шум. Второй слой содержит белый шум, но состоящий из блоков 2*2, третий слой – 4*4 и т. д. Для получения результата не нужно знать ничего, кроме координаты клетки, поэтому можно обойтись без метода gen_area, позволяющего строить карты с учётом значений соседних чанков. Само значение ячейки считается как сумма значений ячеек в каждом из слоёв, умноженных на константные веса.
